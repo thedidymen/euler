@@ -1,8 +1,5 @@
 import math
 
-
-
-
 class prime(object):
 	"""docstring for prime"""
 	def __init__(self, primes=[2, ]):
@@ -13,21 +10,25 @@ class prime(object):
 		return self.primes
 
 	def isprime(self, n):
-		if n > 1:
+		if n == 2:
+			return True
+		elif n > 1:
+			nmax = int(math.sqrt(n)+1)
 			for prime in self.primes:
-				if n in self.primes:
+				if prime >= nmax:
+					self.primes.append(n)
+					return True
+				elif n in self.primes:
 					return True
 				elif n % prime == 0:
 					return False
-			self.primes.append(n)
-			return True
 		else:
 			return False
 
 	def nextprime(self):
 		n = 1
 		while True:
-			n += 1
+			n += 2
 			if n in self.primes:
 				yield n
 			elif self.isprime(n):
