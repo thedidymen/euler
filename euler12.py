@@ -18,7 +18,7 @@
 
 # What is the value of the first triangle number to have over five hundred divisors?
 
-
+from functools import reduce
 import math
 
 class prime(object):
@@ -34,11 +34,10 @@ class prime(object):
 		if n == 2:
 			return True
 		elif n > 1:
-			nmax = int(math.sqrt(n)+1)
 			for prime in self.primes:
 				if n in self.primes:
 					return True
-				elif prime >= nmax:
+				elif prime >= int(math.sqrt(n)+1):
 					self.primes.append(n)
 					return True
 				elif n % prime == 0:
@@ -62,6 +61,20 @@ class prime(object):
 				self.isprime(current)
 		return [prime for prime in self.primes if prime <= n]
 
+	def trialdivision(self, n):
+		assert(n >= 2)
+		if self.isprime(n):
+			return [n]
+		primelist = self.giveprimes(int(math.sqrt(n)+1))
+		for prime in primelist:
+			if n % prime == 0:
+				return [prime] + self.trialdivision(n=n/prime)
+
+	def divisors(self, n):
+		listofprimes = self.trialdivision(n)
+		factors = {prime:listofprimes.count(prime)+1 for prime in listofprimes}
+		return reduce(lambda x, y: x*y, factors.values())
+
 
 def trianglenumber(n):
 	return sum(range(n+1))
@@ -80,10 +93,7 @@ def factors(n):
     divisors.sort()
     return divisors
 
-def trialdivision(n):
-	p = prime()
-	primelist = [p for p in next(priem.nextprime()) if p**2+1 < n]
-	return primelist
+
 
 
 if __name__ == '__main__':
@@ -95,5 +105,16 @@ if __name__ == '__main__':
 	# 	triangle = trianglenumber(n)
 	# 	l = factors(triangle)
 	# print n, triangle, l
-	for n in range(10):
-		print n, trialdivision(n)
+
+	# p = prime()
+	# for n in range(2, 1000):
+	# 	# print "give primes", n, p.giveprimes(n)
+	# 	print
+	# 	# print "triaL", n, p.trialdivision(n)
+	# 	print "divisors", n, p.divisors(n)
+
+	n = 2
+	p = prime()
+	while p.divisors(trianglenumber(n)) < 500:
+		n += 1
+	print trianglenumber(n)

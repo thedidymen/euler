@@ -1,3 +1,6 @@
+
+
+from functools import reduce
 import math
 
 class prime(object):
@@ -13,11 +16,10 @@ class prime(object):
 		if n == 2:
 			return True
 		elif n > 1:
-			nmax = int(math.sqrt(n)+1)
 			for prime in self.primes:
 				if n in self.primes:
 					return True
-				elif prime >= nmax:
+				elif prime >= int(math.sqrt(n)+1):
 					self.primes.append(n)
 					return True
 				elif n % prime == 0:
@@ -40,6 +42,20 @@ class prime(object):
 			for current in range(self.primes[-1], n+1):
 				self.isprime(current)
 		return [prime for prime in self.primes if prime <= n]
+
+	def trialdivision(self, n):
+		assert(n >= 2)
+		if self.isprime(n):
+			return [n]
+		primelist = self.giveprimes(int(math.sqrt(n)+1))
+		for prime in primelist:
+			if n % prime == 0:
+				return [prime] + self.trialdivision(n=n/prime)
+
+	def divisors(self, n):
+		listofprimes = self.trialdivision(n)
+		factors = {prime:listofprimes.count(prime)+1 for prime in listofprimes}
+		return reduce(lambda x, y: x*y, factors.values())
 
 
 def test():
@@ -66,18 +82,23 @@ def test():
 
 if __name__ == '__main__':
 	# test()
+	# p = prime()
+	# for i in range(1, 101):
+	# 	print i, p.giveprimes(i)
+
+	# g = prime()
+	# gen = g.nextprime()
+	# for i in range(1, 101):
+	# 	print i, next(gen)
+
+	# gen = g.nextprime(10)
+	# for i in range(1, 101):
+	# 	print i+10, next(gen)
+
 	p = prime()
-	for i in range(1, 101):
-		print i, p.giveprimes(i)
-
-	g = prime()
-	gen = g.nextprime()
-	for i in range(1, 101):
-		print i, next(gen)
-
-	gen = g.nextprime(10)
-	for i in range(1, 101):
-		print i+10, next(gen)
+	for n in range(2, 100):
+		# print n, p.trialdivision(n)
+		print n, p.giveprimes(n)
 
 
 
