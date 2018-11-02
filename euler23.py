@@ -9,12 +9,14 @@
 # Find the sum of all the positive integers which cannot be written as the sum of two abundant numbers.
 
 
+import datetime
+
 def factors(n):
     """Gives list of proper divisors, inclucding n"""
     counter = 1
     divisors = []
     while counter < int(n**0.5)+1:
-        if n%counter == 0:
+        if n % counter == 0:
             divisors.append(counter)
             if counter != n/counter:    #remove "and test != 1" if you want to include n itself
             	# prevents entering the same number twice
@@ -27,22 +29,26 @@ def sumofdivisors(list):
 	return sum(list[0:-1])
 
 def abundantnumbers(n):
-	return [i  for i in range(n+1) if sumofdivisors(factors(i)) > i]
+	return [i for i in range(n+1) if sumofdivisors(factors(i)) > i]
 
 
 if __name__ == '__main__':
+
+	d = datetime.datetime.now()
+
 	n = 28123
 	listofabundantnumbers = abundantnumbers(n)
 	l = range(n)
 	for i in listofabundantnumbers:
-		print listofabundantnumbers.index(i), "/", len(listofabundantnumbers)
-		print "integers left:", len(l)
+		# print listofabundantnumbers.index(i), "/", len(listofabundantnumbers)
+		# print "integers left:", len(l)
 		for j in listofabundantnumbers:
 			s = i + j
 			if s < n:
-				if s in l:
-					l.remove(s)
-	print l, sum(l)
+				l[s] = 0
+	print sum(l)
+
+	print datetime.datetime.now() - d
 
 
 	
